@@ -32,11 +32,12 @@ describe("* GET/api/topics", () => {
       test("returns an array of topic objects, each of which has a slug and a description property", () => {
         return request(app).get("/api/topics").expect(200)
         .then((topics) => {
-            expect(topics.body).toEqual([
-                { slug: 'mitch', description: 'The man, the Mitch, the legend' },
-                { slug: 'cats', description: 'Not dogs' },
-                { slug: 'paper', description: 'what books are made of' }
-              ])
+            topics.body.forEach((topic) => {
+                expect(topic).toEqual(expect.objectContaining({
+                    slug: expect.any(String),
+                    description: expect.any(String),
+                }))
+            })
         })
       })
 })
