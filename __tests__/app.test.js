@@ -4,20 +4,21 @@ const db = require("../db/connection.js");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data/index");
 
-
 afterAll(() => db.end());
 beforeEach(() => seed(testData));
 
-describe("* GET/api/topics", () => {
+describe("/* non-existing endpoints", () => {
   test("404: non-existent route", () => {
     return request(app)
-      .get("/api/topicsss")
+      .get("/non-existing")
       .expect(404)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("path not found");
       });
   });
+});
 
+describe("* GET/api/topics", () => {
   test("returns status code 200", () => {
     return request(app).get("/api/topics").expect(200);
   });
@@ -28,6 +29,7 @@ describe("* GET/api/topics", () => {
       .expect(200)
       .then((topics) => {
         expect(topics.body).toBeInstanceOf(Array);
+        expect(topics.body.length).toBe(3);
       });
   });
   test("returns an array of topic objects, each of which has a slug and a description property", () => {
@@ -48,15 +50,6 @@ describe("* GET/api/topics", () => {
 });
 
 describe("* GET/api/articles", () => {
-  test("404: non-existent route", () => {
-    return request(app)
-      .get("/api/articels")
-      .expect(404)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("path not found");
-      });
-  });
-
   test("returns status code 200", () => {
     return request(app).get("/api/articles").expect(200);
   });
@@ -67,6 +60,7 @@ describe("* GET/api/articles", () => {
       .expect(200)
       .then((articles) => {
         expect(articles.body).toBeInstanceOf(Array);
+        expect(articles.body.length).toBe(12);
       });
   });
 
@@ -96,7 +90,7 @@ describe("* GET/api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then((articles) => {
-        expect(articles.body).toBeSortedBy("created_at", {descending: true});
+        expect(articles.body).toBeSortedBy("created_at", { descending: true });
       });
   });
 
@@ -107,19 +101,9 @@ describe("* GET/api/articles", () => {
       .then((articles) => {
         articles.body.forEach((article) => {
           expect(article).toEqual(
-            expect.objectContaining({
-              comment_count: expect.any(Number),
-              author: expect.any(String),
-              title: expect.any(String),
-              article_id: expect.any(Number),
-              body: expect.any(String),
-              topic: expect.any(String),
-              created_at: expect.any(String),
-              votes: expect.any(Number),
-            })
+            expect.objectContaining({ comment_count: expect.any(Number) })
           );
         });
       });
   });
-
 });
