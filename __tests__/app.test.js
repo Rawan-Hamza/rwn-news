@@ -107,3 +107,36 @@ describe("* GET/api/articles", () => {
       });
   });
 });
+
+describe("* GET/api/articles/:article_id", () => {
+  test("returns status code 200", () => {
+    return request(app).get("/api/articles/3").expect(200);
+  });
+
+  test("responds with a single matching article", () => {
+    return request(app).get("/api/articles/3").expect(200)
+    .then(({ body }) => {
+      expect(body).toEqual(
+        {
+          article_id: 3,
+          title: 'Eight pug gifs that remind me of mitch',
+            topic: 'mitch',
+            author: 'icellusedkars',
+            body: 'some gifs',
+            created_at: '2020-11-03T09:12:00.000Z',
+            votes: 0
+        }
+      )
+    });
+  });
+      
+  test("returns status code 400 when given invalid article_id", () => {
+        return request(app).get("/api/articles/1652342756").expect(400)
+            .then((response) => {
+              const msg = response.body.msg;
+              expect(msg).toBe("bad request")
+            })
+  })
+
+
+})

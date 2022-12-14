@@ -17,5 +17,18 @@ const readArticles = () => {
     .then((result) => result.rows);
 };
 
-
-module.exports = { readTopics, readArticles };
+const readArticlesById = (article_id) => {
+  return db.query(`
+    SELECT * from articles
+    WHERE article_id = $1;
+  `, [article_id])
+  .then((result) => {
+    if(result.rowCount === 0) {
+      return Promise.reject({msg: "bad request", status: 400})
+    }else {
+      return result.rows[0];
+    }
+    
+  })
+}
+module.exports = { readTopics, readArticles, readArticlesById };
