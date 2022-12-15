@@ -120,13 +120,13 @@ describe("* GET/api/articles/:article_id", () => {
       .then(({ body }) => {
         expect(body.article).toEqual(
           expect.objectContaining({
-            article_id: expect.any(Number),
-            title: expect.any(String),
-            topic: expect.any(String),
-            author: expect.any(String),
-            body: expect.any(String),
-            created_at: expect.any(String),
-            votes: expect.any(Number),
+            article_id: 3,
+          title: 'Eight pug gifs that remind me of mitch',
+            topic: 'mitch',
+            author: 'icellusedkars',
+            body: 'some gifs',
+            created_at: '2020-11-03T09:12:00.000Z',
+            votes: 0
           })
         );
       });
