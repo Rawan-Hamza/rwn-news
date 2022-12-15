@@ -33,7 +33,6 @@ const getComments = (req, res, next) => {
 
   return readComments(article_id)
   .then((comments) => {
-    console.log("im in the controller")
      res.status(200).send(comments)
   }) .catch((err) => {
     next(err)
