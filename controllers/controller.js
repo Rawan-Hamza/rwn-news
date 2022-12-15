@@ -16,8 +16,8 @@ const getArticlesById = (req, res, next) => {
   const { article_id } = req.params;
 
   return readArticlesById(article_id)
-  .then((article) => {
-    res.status(200).send(article)
+  .then((articleData) => {
+    res.status(200).send({article: articleData})
   })
   .catch((err) => {
     next(err)

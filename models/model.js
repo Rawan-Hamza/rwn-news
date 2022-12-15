@@ -24,7 +24,7 @@ const readArticlesById = (article_id) => {
   `, [article_id])
   .then((result) => {
     if(result.rowCount === 0) {
-      return Promise.reject({msg: "bad request", status: 400})
+      return Promise.reject({msg: "not found", status: 404})
     }else {
       return result.rows[0];
     }
