@@ -114,29 +114,41 @@ describe("* GET/api/articles/:article_id", () => {
   });
 
   test("responds with a single matching article", () => {
-    return request(app).get("/api/articles/3").expect(200)
-    .then(({ body }) => {
-      expect(body).toEqual(
-        {
-          article_id: 3,
-          title: 'Eight pug gifs that remind me of mitch',
-            topic: 'mitch',
-            author: 'icellusedkars',
-            body: 'some gifs',
-            created_at: '2020-11-03T09:12:00.000Z',
-            votes: 0
-        }
-      )
-    });
+    return request(app)
+      .get("/api/articles/3")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toEqual(
+          expect.objectContaining({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+          })
+        );
+      });
   });
-      
+
+  test("returns status code 404 when given non-existent article_id", () => {
+    return request(app)
+      .get("/api/articles/1652342756")
+      .expect(404)
+      .then((response) => {
+        const msg = response.body.msg;
+        expect(msg).toBe("not found");
+      });
+  });
+
   test("returns status code 400 when given invalid article_id", () => {
-        return request(app).get("/api/articles/1652342756").expect(400)
-            .then((response) => {
-              const msg = response.body.msg;
-              expect(msg).toBe("bad request")
-            })
-  })
-
-
-})
+    return request(app)
+      .get("/api/articles/nnZnn")
+      .expect(400)
+      .then((response) => {
+        const msg = response.body.msg;
+        expect(msg).toBe("bad request");
+      });
+  });
+});
