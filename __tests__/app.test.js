@@ -18,7 +18,7 @@ describe("/* non-existing endpoints", () => {
   });
 });
 
-describe("* GET/api/topics", () => {
+describe("3. GET/api/topics", () => {
   test("returns status code 200", () => {
     return request(app).get("/api/topics").expect(200);
   });
@@ -49,7 +49,7 @@ describe("* GET/api/topics", () => {
   });
 });
 
-describe("* GET/api/articles", () => {
+describe("4. GET/api/articles", () => {
   test("returns status code 200", () => {
     return request(app).get("/api/articles").expect(200);
   });
@@ -108,7 +108,7 @@ describe("* GET/api/articles", () => {
   });
 });
 
-describe("* GET/api/articles/:article_id", () => {
+describe("5. GET/api/articles/:article_id", () => {
   test("returns status code 200", () => {
     return request(app).get("/api/articles/3").expect(200);
   });
@@ -213,3 +213,27 @@ describe("6. GET/api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("7. POST/api/articles/:article_id/comments", () => {
+  test("returns status 201 and the posted comment", () => {
+    const newComment = {
+      username: "icellusedkars",
+      body:"Hi this article is good"
+    }
+    return request(app)
+    .post("/api/articles/2/comments")
+    .send(newComment)
+    .expect(201)
+    .then((response) => {
+      const { addedComment } = response.body
+      expect.objectContaining({
+        comment_id: expect.any(Number),
+        article_id: 2,
+        body: "Hi this article is good",
+        author: "icellusedkars",
+        created_at: expect.any(String),
+        votes: expect.any(Number),
+      })
+    })
+  })
+})
