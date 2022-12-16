@@ -2,6 +2,7 @@ const {
   readTopics,
   readArticles,
   readArticlesById,
+  readComments
 } = require("../models/model");
 
 const getTopics = (req, res, next) => {
@@ -21,10 +22,22 @@ const getArticlesById = (req, res, next) => {
   return readArticlesById(article_id)
     .then((articleData) => {
       res.status(200).send({ article: articleData });
+    }).catch((err) => {
+      next(err)
     })
-    .catch((err) => {
-      next(err);
-    });
+    
 };
 
-module.exports = { getTopics, getArticles, getArticlesById };
+const getComments = (req, res, next) => {
+  const { article_id } = req.params;
+
+  return readComments(article_id)
+  .then((comments) => {
+     res.status(200).send({ comments })
+  }) .catch((err) => {
+    next(err)
+
+  }) 
+}
+
+module.exports = { getTopics, getArticles, getArticlesById, getComments };

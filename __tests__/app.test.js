@@ -121,12 +121,12 @@ describe("* GET/api/articles/:article_id", () => {
         expect(body.article).toEqual(
           expect.objectContaining({
             article_id: 3,
-          title: 'Eight pug gifs that remind me of mitch',
-            topic: 'mitch',
-            author: 'icellusedkars',
-            body: 'some gifs',
-            created_at: '2020-11-03T09:12:00.000Z',
-            votes: 0
+            title: "Eight pug gifs that remind me of mitch",
+            topic: "mitch",
+            author: "icellusedkars",
+            body: "some gifs",
+            created_at: "2020-11-03T09:12:00.000Z",
+            votes: 0,
           })
         );
       });
@@ -134,7 +134,7 @@ describe("* GET/api/articles/:article_id", () => {
 
   test("returns status code 404 when given non-existent article_id", () => {
     return request(app)
-      .get("/api/articles/1652342756")
+      .get("/api/articles/16572")
       .expect(404)
       .then((response) => {
         const msg = response.body.msg;
@@ -145,6 +145,67 @@ describe("* GET/api/articles/:article_id", () => {
   test("returns status code 400 when given invalid article_id", () => {
     return request(app)
       .get("/api/articles/nnZnn")
+      .expect(400)
+      .then((response) => {
+        const msg = response.body.msg;
+        expect(msg).toBe("bad request");
+      });
+  });
+});
+
+describe("6. GET/api/articles/:article_id/comments", () => {
+  test("returns status code 200", () => {
+    return request(app).get("/api/articles/3/comments").expect(200);
+  });
+
+  test("responds with a single matching article", () => {
+    return request(app)
+      .get("/api/articles/3/comments")
+      .expect(200)
+      .then(({ body }) => {
+        body.comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              article_id: 3,
+              body: expect.any(String),
+              author: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+            })
+          );
+        });
+      });
+  });
+
+  test("responds with an empty array when an article has no comments", () => {
+    return request(app)
+      .get("/api/articles/7/comments")
+      .expect(200)
+  })
+
+  test("returns comments in date order newist first", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+
+  test("returns status code 400 when given non-existent article_id", () => {
+    return request(app)
+      .get("/api/articles/5345/comments")
+      .expect(404)
+      .then((response) => {
+        const msg = response.body.msg;
+        expect(msg).toBe("not found");
+      });
+  });
+
+  test("returns status code 400 when given invalid article_id", () => {
+    return request(app)
+      .get("/api/articles/zzNdf/comments")
       .expect(400)
       .then((response) => {
         const msg = response.body.msg;
