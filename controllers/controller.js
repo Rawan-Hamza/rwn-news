@@ -2,7 +2,8 @@ const {
   readTopics,
   readArticles,
   readArticlesById,
-  readComments
+  readComments,
+  publishComments
 } = require("../models/model");
 
 const getTopics = (req, res, next) => {
@@ -40,4 +41,24 @@ const getComments = (req, res, next) => {
   }) 
 }
 
-module.exports = { getTopics, getArticles, getArticlesById, getComments };
+
+const postComments = (req, res, next) => {
+  const {
+    body: {username, body},
+    params: { article_id },
+  } = req;
+
+  return publishComments(article_id, username, body)
+  .then((addedComment)=>{
+    res.status(201).send({addedComment})
+  })
+  .catch((err) => {
+    console.log(err)
+    next(err)
+  })
+
+}
+
+
+
+module.exports = { getTopics, getArticles, getArticlesById, getComments, postComments };

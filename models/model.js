@@ -66,4 +66,20 @@ const readComments = (article_id) => {
     })
 };
 
-module.exports = { readTopics, readArticles, readArticlesById, readComments };
+const publishComments = (article_id, username, body) => {
+  return db.query(`
+    INSERT INTO comments
+    (article_id, author, body)
+    VALUES
+    ($1, $2, $3)
+    returning *;
+  `, [article_id, username, body])
+
+  .then((result) => {
+    return result.rows[0]
+  })
+}
+
+
+
+module.exports = { readTopics, readArticles, readArticlesById, readComments, publishComments };
