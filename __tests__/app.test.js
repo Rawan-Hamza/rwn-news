@@ -163,11 +163,11 @@ describe("6. GET/api/articles/:article_id/comments", () => {
       .get("/api/articles/3/comments")
       .expect(200)
       .then(({ body }) => {
-        body.forEach((comment) => {
+        body.comments.forEach((comment) => {
           expect(comment).toEqual(
             expect.objectContaining({
               comment_id: expect.any(Number),
-              article_id: expect.any(Number),
+              article_id: 3,
               body: expect.any(String),
               author: expect.any(String),
               created_at: expect.any(String),
@@ -178,12 +178,18 @@ describe("6. GET/api/articles/:article_id/comments", () => {
       });
   });
 
+  test("responds with an empty array when an article has no comments", () => {
+    return request(app)
+      .get("/api/articles/7/comments")
+      .expect(200)
+  })
+
   test("returns comments in date order newist first", () => {
     return request(app)
       .get("/api/articles/1/comments")
       .expect(200)
       .then(({ body }) => {
-        expect(body).toBeSortedBy("created_at", { descending: true });
+        expect(body.comments).toBeSortedBy("created_at", { descending: true });
       });
   });
 

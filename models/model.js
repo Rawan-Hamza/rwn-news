@@ -37,21 +37,33 @@ const readArticlesById = (article_id) => {
 
 const readComments = (article_id) => {
   return db
-  .query(
-    `
+    .query(
+      `
   SELECT * from comments
   WHERE article_id = $1
   ORDER BY created_at DESC;
-`,
-    [article_id]
-  )
-  .then((result) => {
-    if (result.rowCount === 0) {
-      return Promise.reject({ msg: "not found", status: 404 });
-    } else {
-      return result.rows;
+    `,
+      [article_id]
+    )
+    .then((result) => { 
+      if (result.rowCount === 0) {
+        return db
+      .query(
+        `
+      SELECT * from articles
+      WHERE article_id = $1;
+    `,
+        [article_id]
+      )
+      } return result
+     
+    }).then((result) => {
+      if(result.rowCount === 0) {
+        return Promise.reject({msg: "not found", status: 404})
+      } else {
+        return result.rows
       }
-  })
-}
+    })
+};
 
 module.exports = { readTopics, readArticles, readArticlesById, readComments };
