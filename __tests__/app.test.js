@@ -179,10 +179,8 @@ describe("6. GET/api/articles/:article_id/comments", () => {
   });
 
   test("responds with an empty array when an article has no comments", () => {
-    return request(app)
-      .get("/api/articles/7/comments")
-      .expect(200)
-  })
+    return request(app).get("/api/articles/7/comments").expect(200);
+  });
 
   test("returns comments in date order newist first", () => {
     return request(app)
@@ -218,22 +216,67 @@ describe("7. POST/api/articles/:article_id/comments", () => {
   test("returns status 201 and the posted comment", () => {
     const newComment = {
       username: "icellusedkars",
-      body:"Hi this article is good"
-    }
+      body: "Hi this article is good",
+    };
     return request(app)
-    .post("/api/articles/2/comments")
-    .send(newComment)
-    .expect(201)
-    .then((response) => {
-      const { addedComment } = response.body
-      expect.objectContaining({
-        comment_id: expect.any(Number),
-        article_id: 2,
-        body: "Hi this article is good",
-        author: "icellusedkars",
-        created_at: expect.any(String),
-        votes: expect.any(Number),
-      })
-    })
-  })
-})
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(201)
+      .then((response) => {
+        const { addedComment } = response.body;
+        expect.objectContaining({
+          comment_id: expect.any(Number),
+          article_id: 2,
+          body: "Hi this article is good",
+          author: "icellusedkars",
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+        });
+      });
+  });
+
+  test("returns status 404 not found", () => {
+    const newComment = {
+      username: "icellusedkars",
+      body: "Hi this article is good",
+    };
+    return request(app)
+      .post("/api/articles/90/comments")
+      .send(newComment)
+      .expect(404)
+      .then((response) => {
+        const { msg } = response.body;
+        expect(msg).toBe("not found");
+      });
+  });
+
+  test("returns status 400 bad request", () => {
+    const newComment = {
+      username: "icellusedkars",
+      body: "Hi this article is good",
+    };
+    return request(app)
+      .post("/api/articles/nnzna/comments")
+      .send(newComment)
+      .expect(400)
+      .then((response) => {
+        const { msg } = response.body;
+        expect(msg).toBe("bad request");
+      });
+  });
+
+  test("returns status 400 bad request", () => {
+    const newComment = {
+      car: "toyota",
+      colour: "red",
+    };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(400)
+      .then((response) => {
+        const { msg } = response.body;
+        expect(msg).toBe("bad request");
+      });
+  });
+});
