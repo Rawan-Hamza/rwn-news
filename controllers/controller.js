@@ -56,10 +56,16 @@ const postComments = (req, res, next) => {
     });
 };
 
+const patchVotes = (req, res,next) => {
+
+}
+
+
 module.exports = {
   getTopics,
   getArticles,
   getArticlesById,
   getComments,
   postComments,
+  patchVotes
 };

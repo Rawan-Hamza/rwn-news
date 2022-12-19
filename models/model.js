@@ -84,10 +84,15 @@ const publishComments = (article_id, username, body) => {
     });
 };
 
+const updateVotes = (article_id, inc_votes) => {
+
+}
+
 module.exports = {
   readTopics,
   readArticles,
   readArticlesById,
   readComments,
   publishComments,
+  updateVotes,
 };
