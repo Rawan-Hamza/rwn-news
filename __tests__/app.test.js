@@ -348,3 +348,36 @@ describe("8. PATCH/api/articles/:article_id", () => {
       });
   });
 });
+describe("9. GET/api/users", () => {
+  test("returns status code 200", () => {
+    return request(app).get("/api/users").expect(200);
+  });
+
+  test("returns an array", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        const users = response.body
+        expect(users).toBeInstanceOf(Array);
+        expect(users.length).toBe(4);
+      });
+  });
+  test("returns an array of topic objects, each of which has a slug and a description property", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        const users = response.body
+        users.forEach((user) => {
+          expect(user).toEqual(
+            expect.objectContaining({
+              username: expect.any(String),
+              name: expect.any(String),
+              avatar_url: expect.any(String),
+            })
+          );
+        });
+      });
+  });
+});

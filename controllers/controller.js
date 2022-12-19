@@ -5,6 +5,7 @@ const {
   readComments,
   publishComments,
   updateVotes,
+  readUsers,
 } = require("../models/model");
 
 const getTopics = (req, res, next) => {
@@ -71,6 +72,16 @@ const patchVotes = (req, res, next) => {
     });
 };
 
+const getUsers = (req, res, next) => {
+  return readUsers()
+    .then((users) => {
+      res.status(200).send(users);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 module.exports = {
   getTopics,
   getArticles,
@@ -78,4 +89,5 @@ module.exports = {
   getComments,
   postComments,
   patchVotes,
+  getUsers,
 };
