@@ -85,7 +85,6 @@ const publishComments = (article_id, username, body) => {
 };
 
 const updateVotes = (article_id, inc_votes) => {
-  console.log(inc_votes)
   return db.query(
     `
   UPDATE articles
