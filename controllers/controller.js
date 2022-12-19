@@ -4,6 +4,7 @@ const {
   readArticlesById,
   readComments,
   publishComments,
+  updateVotes,
 } = require("../models/model");
 
 const getTopics = (req, res, next) => {
@@ -56,10 +57,19 @@ const postComments = (req, res, next) => {
     });
 };
 
-const patchVotes = (req, res,next) => {
-
-}
-
+const patchVotes = (req, res, next) => {
+  const {
+    body: { inc_votes },
+    params: { article_id },
+  } = req;
+  return updateVotes(article_id, inc_votes)
+    .then((updatedArticle) => {
+      res.status(200).send({ updatedArticle });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 
 module.exports = {
   getTopics,
@@ -67,5 +77,5 @@ module.exports = {
   getArticlesById,
   getComments,
   postComments,
-  patchVotes
+  patchVotes,
 };

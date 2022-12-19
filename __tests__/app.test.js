@@ -280,3 +280,56 @@ describe("7. POST/api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("8. PATCH/api/articles/:article_id", () => {
+  test("returns status 200 and the updated article", () => {
+    const updatedVotes = { inc_votes: 1 };
+    return request(app)
+      .patch("/api/articles/2")
+      .send(updatedVotes)
+      .expect(200)
+      .then((response) => {
+        const { updatedArticle } = response.body;
+        expect(updatedArticle).toMatchObject({
+          article_id: 2,
+          votes: 1,
+        });
+      });
+  });
+
+  test("returns status 400 bad request when the path is invalid", () => {
+    const updatedVotes = { inc_votes: 1 };
+    return request(app)
+      .patch("/api/articles/nnzna")
+      .send(updatedVotes)
+      .expect(400)
+      .then((response) => {
+        const { msg } = response.body;
+        expect(msg).toBe("bad request");
+      });
+  });
+
+  test("returns status 400 bad request when the inc_votes value is invalid", () => {
+    const updatedVotes = { inc_votes: "banana" };
+    return request(app)
+      .patch("/api/articles/2")
+      .send(updatedVotes)
+      .expect(400)
+      .then((response) => {
+        const { msg } = response.body;
+        expect(msg).toBe("bad request");
+      });
+  });
+
+  test("returns status 400 bad request when the inc_votes key is misspelled", () => {
+    const updatedVotes = { Binc_Dotes: 1 };
+    return request(app)
+      .patch("/api/articles/2")
+      .send(updatedVotes)
+      .expect(400)
+      .then((response) => {
+        const { msg } = response.body;
+        expect(msg).toBe("bad request");
+      });
+  });
+});
