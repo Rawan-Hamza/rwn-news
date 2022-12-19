@@ -282,7 +282,7 @@ describe("7. POST/api/articles/:article_id/comments", () => {
 });
 
 describe("8. PATCH/api/articles/:article_id", () => {
-  test("returns status 200 and the updated article", () => {
+  test("returns status 200 and the updated article with increased votes", () => {
     const updatedVotes = { inc_votes: 1 };
     return request(app)
       .patch("/api/articles/2")
@@ -293,6 +293,21 @@ describe("8. PATCH/api/articles/:article_id", () => {
         expect(updatedArticle).toMatchObject({
           article_id: 2,
           votes: 1,
+        });
+      });
+  });
+
+  test("returns status 200 and the updated article with decreased votes", () => {
+    const updatedVotes = { inc_votes: -25 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(updatedVotes)
+      .expect(200)
+      .then((response) => {
+        const { updatedArticle } = response.body;
+        expect(updatedArticle).toMatchObject({
+          article_id: 1,
+          votes: 75,
         });
       });
   });
