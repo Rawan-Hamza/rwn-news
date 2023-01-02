@@ -106,6 +106,31 @@ describe("4. GET/api/articles", () => {
         });
       });
   });
+
+  test("returns status codes 200, accepts a topic query", () => {
+    return request(app)
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .then((articles) => {
+        expect(articles.body).toBeInstanceOf(Array);
+        expect(articles.body.length).toBe(1);
+      });
+  });
+
+  test("returns status codes 200, accepts a sort_by query", () => {
+    return request(app)
+      .get("/api/articles?sort_by=comment_count")
+      .expect(200)
+      .then((articles) => {
+        expect(articles.body).toBeSortedBy("comment_count", {
+          descending: true,
+        });
+      });
+  });
+
+  test("returns 400, when given an invalid query", () => {
+    return request(app).get("/api/articles?sort_by=INVALIDQUERY").expect(400);
+  });
 });
 
 describe("5. GET/api/articles/:article_id", () => {
@@ -348,6 +373,7 @@ describe("8. PATCH/api/articles/:article_id", () => {
       });
   });
 });
+
 describe("9. GET/api/users", () => {
   test("returns status code 200", () => {
     return request(app).get("/api/users").expect(200);
@@ -358,7 +384,7 @@ describe("9. GET/api/users", () => {
       .get("/api/users")
       .expect(200)
       .then((response) => {
-        const users = response.body
+        const users = response.body;
         expect(users).toBeInstanceOf(Array);
         expect(users.length).toBe(4);
       });
@@ -368,7 +394,7 @@ describe("9. GET/api/users", () => {
       .get("/api/users")
       .expect(200)
       .then((response) => {
-        const users = response.body
+        const users = response.body;
         users.forEach((user) => {
           expect(user).toEqual(
             expect.objectContaining({

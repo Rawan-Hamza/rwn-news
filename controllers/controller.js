@@ -15,9 +15,15 @@ const getTopics = (req, res, next) => {
 };
 
 const getArticles = (req, res, next) => {
-  return readArticles().then((articles) => {
-    res.status(200).send(articles);
-  });
+  const { topic, sort_by } = req.query;
+
+  return readArticles(topic, sort_by)
+    .then((articles) => {
+      res.status(200).send(articles);
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 const getArticlesById = (req, res, next) => {
   const { article_id } = req.params;
