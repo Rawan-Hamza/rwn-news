@@ -4,17 +4,40 @@ const readTopics = () => {
   return db.query(`SELECT * FROM topics;`).then((result) => result.rows);
 };
 
-const readArticles = () => {
-  return db
-    .query(
-      `
-    SELECT articles.*, CAST(COUNT(comments.comment_id) AS INT) AS comment_count FROM articles
-    LEFT JOIN comments ON comments.article_id = articles.article_id
-    GROUP BY articles.article_id
-    ORDER BY created_at DESC;
-    `
-    )
-    .then((result) => result.rows);
+const readArticles = (topic, sort_by = "created_at", order = "DESC") => {
+  const validSortingQueries = [
+    "comment_count",
+    "article_id",
+    "created_at",
+    "votes",
+    "body",
+    "author",
+    "title",
+    "topic",
+  ];
+
+  if (!validSortingQueries.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "bad request" });
+  }
+
+  const queryList = [];
+
+  let sqlQuery = `
+  SELECT articles.*, CAST(COUNT(comments.comment_id) AS INT) AS comment_count FROM articles
+  LEFT JOIN comments ON comments.article_id = articles.article_id
+  `;
+
+  if (topic !== undefined) {
+    sqlQuery += `WHERE topic = $1`;
+    queryList.push(topic);
+  }
+
+  sqlQuery += `GROUP BY articles.article_id
+  ORDER BY ${sort_by} ${order};`;
+
+  return db.query(sqlQuery, queryList).then((result) => {
+    return result.rows;
+  });
 };
 
 const readArticlesById = (article_id) => {
