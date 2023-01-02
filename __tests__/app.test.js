@@ -106,31 +106,6 @@ describe("4. GET/api/articles", () => {
         });
       });
   });
-
-  test("returns status codes 200, accepts a topic query", () => {
-    return request(app)
-      .get("/api/articles?topic=cats")
-      .expect(200)
-      .then((articles) => {
-        expect(articles.body).toBeInstanceOf(Array);
-        expect(articles.body.length).toBe(1);
-      });
-  });
-
-  test("returns status codes 200, accepts a sort_by query", () => {
-    return request(app)
-      .get("/api/articles?sort_by=comment_count")
-      .expect(200)
-      .then((articles) => {
-        expect(articles.body).toBeSortedBy("comment_count", {
-          descending: true,
-        });
-      });
-  });
-
-  test("returns 400, when given an invalid query", () => {
-    return request(app).get("/api/articles?sort_by=INVALIDQUERY").expect(400);
-  });
 });
 
 describe("5. GET/api/articles/:article_id", () => {
@@ -404,6 +379,49 @@ describe("9. GET/api/users", () => {
             })
           );
         });
+      });
+  });
+});
+
+describe("10. GET /api/articles (queries)", () => {
+  test("returns status codes 200, accepts a topic query", () => {
+    return request(app)
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .then((articles) => {
+        expect(articles.body).toBeInstanceOf(Array);
+        expect(articles.body.length).toBe(1);
+      });
+  });
+
+  test("returns status codes 200, accepts a sort_by query", () => {
+    return request(app)
+      .get("/api/articles?sort_by=comment_count")
+      .expect(200)
+      .then((articles) => {
+        expect(articles.body).toBeSortedBy("comment_count", {
+          descending: true,
+        });
+      });
+  });
+
+  test("returns 400, when given an invalid query", () => {
+    return request(app).get("/api/articles?sort_by=INVALIDQUERY").expect(400);
+  });
+});
+
+describe("11. GET /api/articles/:article_id (comment count)", () => {
+  test("responds with a single matching article containing the comment_count", () => {
+    return request(app)
+      .get("/api/articles/3")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toEqual(
+          expect.objectContaining({
+            article_id: 3,
+            comment_count: expect.any(Number),
+          })
+        );
       });
   });
 });
