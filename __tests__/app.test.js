@@ -425,3 +425,17 @@ describe("11. GET /api/articles/:article_id (comment count)", () => {
       });
   });
 });
+
+describe("12. DELETE /api/comments/:comment_id", () => {
+  test("returns status 204 no content", () => {
+    return request(app)
+      .delete("/api/comments/4")
+      .expect(204)
+  })
+  
+  test("returns status 404 not found when passed a non-existent comment_id", () => {
+    return request(app)
+      .delete("/api/comments/99")
+      .expect(404)
+  })
+})

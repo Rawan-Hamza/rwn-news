@@ -117,6 +117,18 @@ const readUsers = () => {
   });
 };
 
+const removeCommentsById = (comment_id) => {
+  const sqlQuery = `
+  DELETE FROM comments
+  WHERE comment_id = $1
+  RETURNING *;
+  `
+
+  return db.query(sqlQuery, [comment_id]).then((result) => {
+    return result.rows
+  })
+}
+
 module.exports = {
   readTopics,
   readArticles,
@@ -125,4 +137,5 @@ module.exports = {
   publishComments,
   updateVotes,
   readUsers,
+  removeCommentsById
 };

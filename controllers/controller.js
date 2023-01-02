@@ -1,3 +1,4 @@
+const { response } = require("../app");
 const {
   readTopics,
   readArticles,
@@ -6,6 +7,7 @@ const {
   publishComments,
   updateVotes,
   readUsers,
+  removeCommentsById
 } = require("../models/model");
 
 const getTopics = (req, res, next) => {
@@ -88,6 +90,21 @@ const getUsers = (req, res, next) => {
     });
 };
 
+const deleteCommentById = (req, res, next) => {
+  const {params: {comment_id}} = req;
+  return removeCommentsById(comment_id)
+    .then((response) => {
+      if(response.length !== 0) {
+        res.status(204).send({msg: "comment removed successfully"})
+      } else {
+        res.status(404).send({msg: "comment doesnt exist"})
+      }
+    })
+    .catch((err) => {
+      next(err)
+    })
+}
+
 module.exports = {
   getTopics,
   getArticles,
@@ -96,4 +113,5 @@ module.exports = {
   postComments,
   patchVotes,
   getUsers,
+  deleteCommentById
 };
