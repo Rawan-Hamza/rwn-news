@@ -110,8 +110,10 @@ const getEndPoints = (req, res, next) => {
 
   return readEndPoints()
     .then((result) => {
-      console.log(result);
       res.status(200).send(result)
+    })
+    .catch((err) => {
+      next(err)
     })
 }
 
