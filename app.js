@@ -15,6 +15,7 @@ const {
 const app = express();
 app.use(express.json());
 
+app.use(cors());
 app.get("/api/topics", getTopics);
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticlesById);
@@ -25,7 +26,7 @@ app.get("/api/users", getUsers);
 app.delete("/api/comments/:comment_id", deleteCommentById)
 app.get("/api", getEndPoints)
 
-app.use(cors());
+
 app.all("*", (req, res, next) => {
   res.status(404).send({ msg: "path not found" });
 });
