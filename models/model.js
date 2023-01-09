@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const fs = require("fs/promises")
 
 const readTopics = () => {
   return db.query(`SELECT * FROM topics;`).then((result) => result.rows);
@@ -129,6 +130,11 @@ const removeCommentsById = (comment_id) => {
   })
 }
 
+const readEndPoints = () => {
+return fs.readFile('endpoints.json', "utf-8")
+         .then(data => data)
+}
+
 module.exports = {
   readTopics,
   readArticles,
@@ -137,5 +143,6 @@ module.exports = {
   publishComments,
   updateVotes,
   readUsers,
-  removeCommentsById
+  removeCommentsById,
+  readEndPoints
 };

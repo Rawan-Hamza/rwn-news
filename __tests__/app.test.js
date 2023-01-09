@@ -158,7 +158,7 @@ describe("6. GET/api/articles/:article_id/comments", () => {
     return request(app).get("/api/articles/3/comments").expect(200);
   });
 
-  test("responds with a single matching article", () => {
+  test("responds with the comments of a single matching article", () => {
     return request(app)
       .get("/api/articles/3/comments")
       .expect(200)
@@ -250,7 +250,7 @@ describe("7. POST/api/articles/:article_id/comments", () => {
       });
   });
 
-  test("returns status 400 bad request", () => {
+  test("returns status 400 bad request with invalid article_id", () => {
     const newComment = {
       username: "icellusedkars",
       body: "Hi this article is good",
@@ -265,7 +265,7 @@ describe("7. POST/api/articles/:article_id/comments", () => {
       });
   });
 
-  test("returns status 400 bad request", () => {
+  test("returns status 400 bad request when sending invalid data", () => {
     const newComment = {
       car: "toyota",
       colour: "red",
@@ -415,8 +415,8 @@ describe("11. GET /api/articles/:article_id (comment count)", () => {
     return request(app)
       .get("/api/articles/3")
       .expect(200)
-      .then(({ body }) => {
-        expect(body.article).toEqual(
+      .then(({ body: {article} }) => {
+        expect(article).toEqual(
           expect.objectContaining({
             article_id: 3,
             comment_count: expect.any(Number),
@@ -438,4 +438,13 @@ describe("12. DELETE /api/comments/:comment_id", () => {
       .delete("/api/comments/99")
       .expect(404)
   })
+})
+
+describe("13. GET /api", () => {
+  test("returns an endpoints JSON with all the available endpoints", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+  })
+  
 })

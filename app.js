@@ -1,3 +1,5 @@
+
+const cors = require('cors');
 const express = require("express");
 const {
   getTopics,
@@ -8,6 +10,7 @@ const {
   patchVotes,
   getUsers,
   deleteCommentById,
+  getEndPoints,
 } = require("./controllers/controller");
 const app = express();
 app.use(express.json());
@@ -20,7 +23,9 @@ app.post("/api/articles/:article_id/comments", postComments);
 app.patch("/api/articles/:article_id", patchVotes);
 app.get("/api/users", getUsers);
 app.delete("/api/comments/:comment_id", deleteCommentById)
+app.get("/api", getEndPoints)
 
+app.use(cors());
 app.all("*", (req, res, next) => {
   res.status(404).send({ msg: "path not found" });
 });
