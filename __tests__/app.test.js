@@ -415,7 +415,7 @@ describe("11. GET /api/articles/:article_id (comment count)", () => {
     return request(app)
       .get("/api/articles/3")
       .expect(200)
-      .then(({ body: {article} }) => {
+      .then(({ body: { article } }) => {
         expect(article).toEqual(
           expect.objectContaining({
             article_id: 3,
@@ -428,23 +428,16 @@ describe("11. GET /api/articles/:article_id (comment count)", () => {
 
 describe("12. DELETE /api/comments/:comment_id", () => {
   test("returns status 204 no content", () => {
-    return request(app)
-      .delete("/api/comments/4")
-      .expect(204)
-  })
-  
+    return request(app).delete("/api/comments/4").expect(204);
+  });
+
   test("returns status 404 not found when passed a non-existent comment_id", () => {
-    return request(app)
-      .delete("/api/comments/99")
-      .expect(404)
-  })
-})
+    return request(app).delete("/api/comments/99").expect(404);
+  });
+});
 
 describe("13. GET /api", () => {
   test("returns an endpoints JSON with all the available endpoints", () => {
-    return request(app)
-      .get("/api")
-      .expect(200)
-  })
-  
-})
+    return request(app).get("/api").expect(200);
+  });
+});

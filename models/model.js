@@ -1,5 +1,5 @@
 const db = require("../db/connection");
-const fs = require("fs/promises")
+const fs = require("fs/promises");
 
 const readTopics = () => {
   return db.query(`SELECT * FROM topics;`).then((result) => result.rows);
@@ -123,17 +123,16 @@ const removeCommentsById = (comment_id) => {
   DELETE FROM comments
   WHERE comment_id = $1
   RETURNING *;
-  `
+  `;
 
   return db.query(sqlQuery, [comment_id]).then((result) => {
-    return result.rows
-  })
-}
+    return result.rows;
+  });
+};
 
 const readEndPoints = () => {
-return fs.readFile('endpoints.json', "utf-8")
-         .then(data => data)
-}
+  return fs.readFile("endpoints.json", "utf-8").then((data) => data);
+};
 
 module.exports = {
   readTopics,
@@ -144,5 +143,5 @@ module.exports = {
   updateVotes,
   readUsers,
   removeCommentsById,
-  readEndPoints
+  readEndPoints,
 };

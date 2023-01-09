@@ -8,7 +8,7 @@ const {
   updateVotes,
   readUsers,
   removeCommentsById,
-  readEndPoints
+  readEndPoints,
 } = require("../models/model");
 
 const getTopics = (req, res, next) => {
@@ -92,30 +92,31 @@ const getUsers = (req, res, next) => {
 };
 
 const deleteCommentById = (req, res, next) => {
-  const {params: {comment_id}} = req;
+  const {
+    params: { comment_id },
+  } = req;
   return removeCommentsById(comment_id)
     .then((response) => {
-      if(response.length !== 0) {
-        res.status(204).send(response.msg = "comment removed successfully")
+      if (response.length !== 0) {
+        res.status(204).send((response.msg = "comment removed successfully"));
       } else {
-        res.status(404).send({msg: "comment doesnt exist"})
+        res.status(404).send({ msg: "comment doesnt exist" });
       }
     })
     .catch((err) => {
-      next(err)
-    })
-}
+      next(err);
+    });
+};
 
 const getEndPoints = (req, res, next) => {
-
   return readEndPoints()
     .then((result) => {
-      res.status(200).send(result)
+      res.status(200).send(result);
     })
     .catch((err) => {
-      next(err)
-    })
-}
+      next(err);
+    });
+};
 
 module.exports = {
   getTopics,
@@ -126,5 +127,5 @@ module.exports = {
   patchVotes,
   getUsers,
   deleteCommentById,
-  getEndPoints
+  getEndPoints,
 };
