@@ -426,13 +426,18 @@ describe("11. GET /api/articles/:article_id (comment count)", () => {
   });
 });
 
-describe("12. DELETE /api/comments/:comment_id", () => {
+describe("12. DELETE /api/articles/:article_id/comments/:comment_id", () => {
   test("returns status 204 no content", () => {
-    return request(app).delete("/api/comments/4").expect(204);
+    return request(app).delete("/api/articles/1/comments/4").expect(204);
   });
 
   test("returns status 404 not found when passed a non-existent comment_id", () => {
-    return request(app).delete("/api/comments/99").expect(404);
+    return request(app)
+      .delete("/api/articles/7/comments/999")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("comment not found");
+      });
   });
 });
 

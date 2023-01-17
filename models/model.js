@@ -118,14 +118,14 @@ const readUsers = () => {
   });
 };
 
-const removeCommentsById = (comment_id) => {
+const removeCommentsById = (article_id, comment_id) => {
   const sqlQuery = `
   DELETE FROM comments
-  WHERE comment_id = $1
+  WHERE article_id =$1 AND comment_id = $2
   RETURNING *;
   `;
 
-  return db.query(sqlQuery, [comment_id]).then((result) => {
+  return db.query(sqlQuery, [article_id, comment_id]).then((result) => {
     return result.rows;
   });
 };

@@ -93,14 +93,14 @@ const getUsers = (req, res, next) => {
 
 const deleteCommentById = (req, res, next) => {
   const {
-    params: { comment_id },
+    params: { article_id, comment_id },
   } = req;
-  return removeCommentsById(comment_id)
-    .then((response) => {
-      if (response.length !== 0) {
-        res.status(204).send((response.msg = "comment removed successfully"));
+  return removeCommentsById(article_id, comment_id)
+    .then((deletedComment) => {
+      if (deletedComment.length) {
+        res.status(204).send({ body: deletedComment });
       } else {
-        res.status(404).send({ msg: "comment doesnt exist" });
+        res.status(404).send({ msg: "comment not found" });
       }
     })
     .catch((err) => {
